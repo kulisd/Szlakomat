@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Szlakomat — Architektura warstwowa</title>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'JetBrains Mono', monospace;
+      background: #020617;
+      min-height: 100vh;
+      padding: 2rem;
+      color: white;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .header {
+      margin-bottom: 2rem;
+    }
+
+    .header-row {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .pulse-dot {
+      width: 12px;
+      height: 12px;
+      background: #34d399;
+      border-radius: 50%;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+
+    h1 {
+      font-size: 1.5rem;
+      font-weight: 700;
+      letter-spacing: -0.025em;
+    }
+
+    .subtitle {
+      color: #94a3b8;
+      font-size: 0.875rem;
+      margin-left: 1.75rem;
+    }
+
+    .diagram-container {
+      background: rgba(15, 23, 42, 0.5);
+      border-radius: 1rem;
+      border: 1px solid #1e293b;
+      padding: 1.5rem;
+      overflow-x: auto;
+    }
+
+    svg {
+      width: 100%;
+      min-width: 900px;
+      display: block;
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1rem;
+      margin-top: 2rem;
+    }
+
+    .card {
+      background: rgba(15, 23, 42, 0.5);
+      border-radius: 0.75rem;
+      border: 1px solid #1e293b;
+      padding: 1.25rem;
+    }
+
+    .card-header {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .card-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+    }
+
+    .card-dot.cyan { background: #22d3ee; }
+    .card-dot.emerald { background: #34d399; }
+    .card-dot.violet { background: #a78bfa; }
+    .card-dot.amber { background: #fbbf24; }
+    .card-dot.rose { background: #fb7185; }
+    .card-dot.slate { background: #94a3b8; }
+
+    .card h3 {
+      font-size: 0.875rem;
+      font-weight: 600;
+    }
+
+    .card ul {
+      list-style: none;
+      color: #94a3b8;
+      font-size: 0.75rem;
+    }
+
+    .card li {
+      margin-bottom: 0.375rem;
+    }
+
+    .footer {
+      text-align: center;
+      margin-top: 1.5rem;
+      color: #475569;
+      font-size: 0.75rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Header -->
+    <div class="header">
+      <div class="header-row">
+        <div class="pulse-dot"></div>
+        <h1>Szlakomat.Products — Architektura warstwowa</h1>
+      </div>
+      <p class="subtitle">Clean Architecture · kierunek zależności wymuszony przez testy NetArchTest</p>
+    </div>
+
+    <!-- Main Diagram -->
+    <div class="diagram-container">
+      <svg viewBox="0 0 1000 760">
+        <!-- Definitions -->
+        <defs>
+          <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+            <polygon points="0 0, 10 3.5, 0 7" fill="#64748b" />
+          </marker>
+          <marker id="arrowhead-rose" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+            <polygon points="0 0, 10 3.5, 0 7" fill="#fb7185" />
+          </marker>
+          <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+            <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#1e293b" stroke-width="0.5"/>
+          </pattern>
+        </defs>
+
+        <!-- Background Grid -->
+        <rect width="100%" height="100%" fill="url(#grid)" />
+
+        <!-- Title strip -->
+        <text x="40" y="40" fill="#94a3b8" font-size="10" font-weight="600">Kierunek zaleznosci  -->  do wewnatrz (Api  ->  Infrastructure  ->  Application  ->  Domain)</text>
+
+        <!-- =================================================================
+             ARROWS (drawn first, below boxes)
+             ================================================================= -->
+
+        <!-- Api -> Infrastructure -->
+        <line x1="225" y1="180" x2="225" y2="248" stroke="#64748b" stroke-width="1.5" marker-end="url(#arrowhead)"/>
+        <text x="240" y="218" fill="#94a3b8" font-size="9">zalezy od</text>
+
+        <!-- Infrastructure -> Application -->
+        <line x1="225" y1="350" x2="225" y2="418" stroke="#64748b" stroke-width="1.5" marker-end="url(#arrowhead)"/>
+        <text x="240" y="388" fill="#94a3b8" font-size="9">zalezy od</text>
+
+        <!-- Application -> Domain -->
+        <line x1="225" y1="520" x2="225" y2="588" stroke="#64748b" stroke-width="1.5" marker-end="url(#arrowhead)"/>
+        <text x="240" y="558" fill="#94a3b8" font-size="9">zalezy od</text>
+
+        <!-- Fitness-functions arrows from test projects (rose dashed) -->
+        <!-- Architecture.Tests -> Api -->
+        <path d="M 840 150 Q 540 150 340 150" fill="none" stroke="#fb7185" stroke-width="1.5" stroke-dasharray="5,5" marker-end="url(#arrowhead-rose)"/>
+        <!-- Architecture.Tests -> Infrastructure -->
+        <path d="M 840 310 Q 600 310 340 310" fill="none" stroke="#fb7185" stroke-width="1.5" stroke-dasharray="5,5" marker-end="url(#arrowhead-rose)"/>
+        <!-- Architecture.Tests -> Application -->
+        <path d="M 840 470 Q 600 470 340 470" fill="none" stroke="#fb7185" stroke-width="1.5" stroke-dasharray="5,5" marker-end="url(#arrowhead-rose)"/>
+        <!-- Architecture.Tests -> Domain -->
+        <path d="M 840 640 Q 540 640 340 640" fill="none" stroke="#fb7185" stroke-width="1.5" stroke-dasharray="5,5" marker-end="url(#arrowhead-rose)"/>
+        <text x="565" y="145" fill="#fb7185" font-size="9" font-weight="600">fitness functions (NetArchTest)</text>
+
+        <!-- Application.Tests -> Application (journey tests via MediatR) -->
+        <path d="M 740 470 Q 560 470 340 470" fill="none" stroke="#fb7185" stroke-width="1.2" stroke-dasharray="3,3" opacity="0"/>
+        <line x1="735" y1="445" x2="345" y2="445" stroke="#fb7185" stroke-width="1.5" stroke-dasharray="3,3" marker-end="url(#arrowhead-rose)"/>
+        <text x="540" y="440" fill="#fb7185" font-size="9" text-anchor="middle">journey tests (IMediator)</text>
+
+        <!-- Domain.Tests -> Domain -->
+        <line x1="735" y1="615" x2="345" y2="615" stroke="#fb7185" stroke-width="1.5" stroke-dasharray="3,3" marker-end="url(#arrowhead-rose)"/>
+        <text x="540" y="610" fill="#fb7185" font-size="9" text-anchor="middle">unit tests</text>
+
+        <!-- =================================================================
+             LAYER: API (top)
+             ================================================================= -->
+        <rect x="80" y="80" width="290" height="100" rx="6" fill="#0f172a"/>
+        <rect x="80" y="80" width="290" height="100" rx="6" fill="rgba(8, 51, 68, 0.4)" stroke="#22d3ee" stroke-width="1.5"/>
+        <text x="225" y="104" fill="white" font-size="12" font-weight="700" text-anchor="middle">Szlakomat.Products.Api</text>
+        <text x="225" y="120" fill="#22d3ee" font-size="9" text-anchor="middle">Warstwa prezentacji (HTTP)</text>
+        <text x="225" y="140" fill="#94a3b8" font-size="9" text-anchor="middle">- kontrolery ASP.NET Core</text>
+        <text x="225" y="154" fill="#94a3b8" font-size="9" text-anchor="middle">- tlumaczenie HTTP na zadania MediatR</text>
+        <text x="225" y="168" fill="#94a3b8" font-size="9" text-anchor="middle">- dopasowanie Result&lt;TF, TS&gt; na kody HTTP</text>
+
+        <!-- =================================================================
+             LAYER: INFRASTRUCTURE
+             ================================================================= -->
+        <rect x="80" y="250" width="290" height="100" rx="6" fill="#0f172a"/>
+        <rect x="80" y="250" width="290" height="100" rx="6" fill="rgba(76, 29, 149, 0.4)" stroke="#a78bfa" stroke-width="1.5"/>
+        <text x="225" y="274" fill="white" font-size="12" font-weight="700" text-anchor="middle">Szlakomat.Products.Infrastructure</text>
+        <text x="225" y="290" fill="#a78bfa" font-size="9" text-anchor="middle">Warstwa infrastruktury</text>
+        <text x="225" y="310" fill="#94a3b8" font-size="9" text-anchor="middle">- implementacje repozytoriow in-memory</text>
+        <text x="225" y="324" fill="#94a3b8" font-size="9" text-anchor="middle">- rejestracja DI: ProductServiceExtensions</text>
+        <text x="225" y="338" fill="#94a3b8" font-size="9" text-anchor="middle">- dane seed</text>
+
+        <!-- =================================================================
+             LAYER: APPLICATION
+             ================================================================= -->
+        <rect x="80" y="420" width="290" height="100" rx="6" fill="#0f172a"/>
+        <rect x="80" y="420" width="290" height="100" rx="6" fill="rgba(6, 78, 59, 0.4)" stroke="#34d399" stroke-width="1.5"/>
+        <text x="225" y="444" fill="white" font-size="12" font-weight="700" text-anchor="middle">Szlakomat.Products.Application</text>
+        <text x="225" y="460" fill="#34d399" font-size="9" text-anchor="middle">Warstwa aplikacji (CQRS)</text>
+        <text x="225" y="480" fill="#94a3b8" font-size="9" text-anchor="middle">- komendy i zapytania (IRequest)</text>
+        <text x="225" y="494" fill="#94a3b8" font-size="9" text-anchor="middle">- handlery MediatR (sealed)</text>
+        <text x="225" y="508" fill="#94a3b8" font-size="9" text-anchor="middle">- Result&lt;string, T&gt; -- railway-oriented</text>
+
+        <!-- =================================================================
+             LAYER: DOMAIN (with bounded contexts)
+             ================================================================= -->
+        <rect x="80" y="590" width="660" height="140" rx="6" fill="#0f172a"/>
+        <rect x="80" y="590" width="660" height="140" rx="6" fill="rgba(6, 78, 59, 0.25)" stroke="#34d399" stroke-width="1.5"/>
+        <text x="410" y="612" fill="white" font-size="12" font-weight="700" text-anchor="middle">Szlakomat.Products.Domain</text>
+        <text x="410" y="628" fill="#34d399" font-size="9" text-anchor="middle">Warstwa domenowa — agregaty, value objecty, interfejsy repozytoriow (zaleznosc: CommunityToolkit.Diagnostics)</text>
+
+        <!-- Bounded context: Catalog -->
+        <rect x="95" y="645" width="150" height="70" rx="6" fill="rgba(30, 41, 59, 0.55)" stroke="#34d399" stroke-width="1"/>
+        <text x="170" y="663" fill="white" font-size="10" font-weight="600" text-anchor="middle">Catalog</text>
+        <text x="170" y="679" fill="#94a3b8" font-size="8" text-anchor="middle">- ProductType</text>
+        <text x="170" y="691" fill="#94a3b8" font-size="8" text-anchor="middle">- PackageType</text>
+        <text x="170" y="706" fill="#34d399" font-size="7" text-anchor="middle">czym produkt jest</text>
+
+        <!-- Bounded context: CommercialOffer -->
+        <rect x="255" y="645" width="150" height="70" rx="6" fill="rgba(30, 41, 59, 0.55)" stroke="#34d399" stroke-width="1"/>
+        <text x="330" y="663" fill="white" font-size="10" font-weight="600" text-anchor="middle">CommercialOffer</text>
+        <text x="330" y="679" fill="#94a3b8" font-size="8" text-anchor="middle">- CatalogEntry</text>
+        <text x="330" y="691" fill="#94a3b8" font-size="8" text-anchor="middle">- Validity</text>
+        <text x="330" y="706" fill="#34d399" font-size="7" text-anchor="middle">kiedy i jak prezentowany</text>
+
+        <!-- Bounded context: Instances -->
+        <rect x="415" y="645" width="150" height="70" rx="6" fill="rgba(30, 41, 59, 0.55)" stroke="#34d399" stroke-width="1"/>
+        <text x="490" y="663" fill="white" font-size="10" font-weight="600" text-anchor="middle">Instances</text>
+        <text x="490" y="679" fill="#94a3b8" font-size="8" text-anchor="middle">- ProductInstance</text>
+        <text x="490" y="691" fill="#94a3b8" font-size="8" text-anchor="middle">- PackageInstance, Batch</text>
+        <text x="490" y="706" fill="#34d399" font-size="7" text-anchor="middle">konkretne realizacje</text>
+
+        <!-- Bounded context: Relationships -->
+        <rect x="575" y="645" width="150" height="70" rx="6" fill="rgba(30, 41, 59, 0.55)" stroke="#34d399" stroke-width="1"/>
+        <text x="650" y="663" fill="white" font-size="10" font-weight="600" text-anchor="middle">Relationships</text>
+        <text x="650" y="679" fill="#94a3b8" font-size="8" text-anchor="middle">- ProductRelationship</text>
+        <text x="650" y="691" fill="#94a3b8" font-size="8" text-anchor="middle">- DefiningPolicy</text>
+        <text x="650" y="706" fill="#34d399" font-size="7" text-anchor="middle">relacje miedzy typami</text>
+
+        <!-- Shared kernel (Common / Quantity) -->
+        <rect x="400" y="555" width="170" height="30" rx="6" fill="rgba(30, 41, 59, 0.6)" stroke="#94a3b8" stroke-width="1"/>
+        <text x="485" y="572" fill="white" font-size="9" font-weight="600" text-anchor="middle">Shared kernel: Common/ · Quantity/</text>
+        <text x="485" y="582" fill="#94a3b8" font-size="7" text-anchor="middle">IProduct · IInstance · Result&lt;TF,TS&gt; · Unit</text>
+
+        <!-- =================================================================
+             TEST PROJECTS (right side)
+             ================================================================= -->
+        <rect x="740" y="80" width="220" height="100" rx="6" fill="#0f172a"/>
+        <rect x="740" y="80" width="220" height="100" rx="6" fill="rgba(30, 41, 59, 0.5)" stroke="#94a3b8" stroke-width="1.5"/>
+        <text x="850" y="104" fill="white" font-size="11" font-weight="700" text-anchor="middle">Architecture.Tests</text>
+        <text x="850" y="120" fill="#94a3b8" font-size="8" text-anchor="middle">Szlakomat.Products.Architecture.Tests</text>
+        <text x="850" y="140" fill="#94a3b8" font-size="9" text-anchor="middle">- NetArchTest.Rules</text>
+        <text x="850" y="154" fill="#94a3b8" font-size="9" text-anchor="middle">- LayerDependency / Visibility</text>
+        <text x="850" y="168" fill="#94a3b8" font-size="9" text-anchor="middle">- CQRS / Naming / Immutability</text>
+
+        <rect x="740" y="420" width="220" height="70" rx="6" fill="#0f172a"/>
+        <rect x="740" y="420" width="220" height="70" rx="6" fill="rgba(30, 41, 59, 0.5)" stroke="#94a3b8" stroke-width="1.5"/>
+        <text x="850" y="444" fill="white" font-size="11" font-weight="700" text-anchor="middle">Application.Tests</text>
+        <text x="850" y="460" fill="#94a3b8" font-size="8" text-anchor="middle">Szlakomat.Products.Application.Tests</text>
+        <text x="850" y="478" fill="#94a3b8" font-size="9" text-anchor="middle">- journey testy przez IMediator</text>
+
+        <rect x="740" y="590" width="220" height="70" rx="6" fill="#0f172a"/>
+        <rect x="740" y="590" width="220" height="70" rx="6" fill="rgba(30, 41, 59, 0.5)" stroke="#94a3b8" stroke-width="1.5"/>
+        <text x="850" y="614" fill="white" font-size="11" font-weight="700" text-anchor="middle">Domain.Tests</text>
+        <text x="850" y="630" fill="#94a3b8" font-size="8" text-anchor="middle">Szlakomat.Products.Domain.Tests</text>
+        <text x="850" y="648" fill="#94a3b8" font-size="9" text-anchor="middle">- testy jednostkowe (xUnit)</text>
+
+        <!-- =================================================================
+             LEGEND (outside all boundaries)
+             ================================================================= -->
+        <text x="40" y="750" fill="white" font-size="10" font-weight="600">Legenda:</text>
+
+        <rect x="110" y="741" width="16" height="10" rx="2" fill="rgba(8, 51, 68, 0.4)" stroke="#22d3ee" stroke-width="1"/>
+        <text x="132" y="750" fill="#94a3b8" font-size="8">Api (prezentacja)</text>
+
+        <rect x="250" y="741" width="16" height="10" rx="2" fill="rgba(76, 29, 149, 0.4)" stroke="#a78bfa" stroke-width="1"/>
+        <text x="272" y="750" fill="#94a3b8" font-size="8">Infrastructure</text>
+
+        <rect x="380" y="741" width="16" height="10" rx="2" fill="rgba(6, 78, 59, 0.4)" stroke="#34d399" stroke-width="1"/>
+        <text x="402" y="750" fill="#94a3b8" font-size="8">Application / Domain</text>
+
+        <rect x="540" y="741" width="16" height="10" rx="2" fill="rgba(30, 41, 59, 0.5)" stroke="#94a3b8" stroke-width="1"/>
+        <text x="562" y="750" fill="#94a3b8" font-size="8">Testy / shared kernel</text>
+
+        <line x1="700" y1="746" x2="720" y2="746" stroke="#fb7185" stroke-width="1.5" stroke-dasharray="3,3"/>
+        <text x="726" y="750" fill="#94a3b8" font-size="8">przeplyw weryfikacji</text>
+
+        <line x1="870" y1="746" x2="890" y2="746" stroke="#64748b" stroke-width="1.5" marker-end="url(#arrowhead)"/>
+        <text x="896" y="750" fill="#94a3b8" font-size="8">zaleznosc</text>
+      </svg>
+    </div>
+
+    <!-- Info Cards -->
+    <div class="cards">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-dot emerald"></div>
+          <h3>Kierunek zależności</h3>
+        </div>
+        <ul>
+          <li>• Domain nie odwołuje się do Application / Infrastructure / Api / MediatR</li>
+          <li>• Application zależy wyłącznie od Domain; bez Infrastructure / Api / ASP.NET Core</li>
+          <li>• Infrastructure nie może odwoływać się do Api</li>
+          <li>• Reguły wymuszane przez testy w <code>LayerDependency/</code></li>
+          <li>• Api tłumaczy HTTP na żądania MediatR i dopasowuje <code>Result&lt;TF, TS&gt;</code></li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div class="card-dot violet"></div>
+          <h3>Bounded contexty</h3>
+        </div>
+        <ul>
+          <li>• <b>Catalog</b> — ProductType / PackageType, niezmienialne po utworzeniu</li>
+          <li>• <b>CommercialOffer</b> — CatalogEntry + Validity (widoczność, nie blokuje instancji)</li>
+          <li>• <b>Instances</b> — ProductInstance, PackageInstance, Batch; tracking strategy</li>
+          <li>• <b>Relationships</b> — skierowane relacje między typami (DefiningPolicy)</li>
+          <li>• <b>Shared kernel</b> — <code>Common/</code>, <code>Quantity/</code> (IProduct, IInstance, Result, Unit)</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div class="card-dot rose"></div>
+          <h3>Testy architektoniczne</h3>
+        </div>
+        <ul>
+          <li>• <b>NetArchTest.Rules</b> — fitness functions na assembly</li>
+          <li>• <b>LayerDependency</b> — kierunek zależności warstw</li>
+          <li>• <b>CqrsConventionTests</b> — handlery <code>sealed</code>, <code>IRequest&lt;T&gt;</code>, jedna odpowiedzialność</li>
+          <li>• <b>Immutability</b> — value objecty bez publicznych setterów</li>
+          <li>• <b>Visibility</b> — agregaty <code>internal</code>; dostęp przez <code>InternalsVisibleTo</code></li>
+          <li>• <b>NamingConventions</b> — wzorce nazw w warstwach</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <p class="footer">
+      Szlakomat.Products · Clean Architecture · CQRS + MediatR · Railway-oriented (Result&lt;TF, TS&gt;)
+    </p>
+  </div>
+</body>
+</html>

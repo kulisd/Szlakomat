@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <LangVersion>latest</LangVersion>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Szlakomat.Products.Application\Szlakomat.Products.Application.csproj" />
+    <ProjectReference Include="..\Szlakomat.Products.Infrastructure\Szlakomat.Products.Infrastructure.csproj" />
+    <PackageReference Include="MediatR" Version="12.*" />
+  </ItemGroup>
+</Project>
