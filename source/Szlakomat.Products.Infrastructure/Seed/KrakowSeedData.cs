@@ -2,7 +2,6 @@ using Szlakomat.Products.Domain.CommercialOffer;
 using Szlakomat.Products.Domain.Relationships;
 using Szlakomat.Products.Infrastructure.Catalog;
 using Szlakomat.Products.Infrastructure.Seed.BazylikaMariacka;
-using Szlakomat.Products.Infrastructure.Seed.MariackaBasilica;
 using Szlakomat.Products.Infrastructure.Seed.Wawel;
 
 namespace Szlakomat.Products.Infrastructure.Seed;
@@ -68,7 +67,7 @@ internal static class KrakowSeedData
         ProductRelationshipFactory relationshipFactory)
     {
         var exhibitions = MariackaExhibitionsSeed.Seed(productRepo);
-        var services = MariackaServicesSeed.Seed(productRepo);
+        var services = MariackaServiceSeed.Seed(productRepo);
 
         var packages = MariackaPackagesSeed.Seed(
             packageRepo,

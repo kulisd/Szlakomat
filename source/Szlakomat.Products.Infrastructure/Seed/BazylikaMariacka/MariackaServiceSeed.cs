@@ -5,7 +5,7 @@ using Szlakomat.Products.Domain.Common.Applicability;
 using Szlakomat.Products.Domain.Common.Identifiers;
 using Szlakomat.Products.Domain.Quantity;
 
-namespace Szlakomat.Products.Infrastructure.Seed.MariackaBasilica;
+namespace Szlakomat.Products.Infrastructure.Seed.BazylikaMariacka;
 
 /// <summary>
 /// Seeds ancillary services for Bazylika Mariacka as ProductType instances.
@@ -30,7 +30,7 @@ namespace Szlakomat.Products.Infrastructure.Seed.MariackaBasilica;
 /// The basilica does not publish a full services price list online;
 /// prices and exact conditions are approximated from comparable Kraków sites.
 /// </summary>
-internal static class MariackaServicesSeed
+internal static class MariackaServiceSeed
 {
     public static List<ProductType> Seed(IProductTypeRepository repo)
     {

@@ -4,7 +4,7 @@ using Szlakomat.Products.Domain.Common;
 using Szlakomat.Products.Domain.Common.Applicability;
 using Szlakomat.Products.Domain.Common.Identifiers;
 
-namespace Szlakomat.Products.Infrastructure.Seed.MariackaBasilica;
+namespace Szlakomat.Products.Infrastructure.Seed.BazylikaMariacka;
 
 /// <summary>
 /// Seeds package types for Bazylika Mariacka.
