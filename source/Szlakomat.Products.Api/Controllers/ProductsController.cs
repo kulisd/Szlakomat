@@ -49,20 +49,44 @@ public class ProductsController(ISender mediator) : ControllerBase
 
     /// <summary>
     /// Zwraca listę typów produktów filtrowanych po strategii śledzenia.
-    /// Gdy filtr nie zostanie podany, zwracana jest pusta kolekcja — endpoint
-    /// nie obsługuje pobierania wszystkich typów jednocześnie.
+    /// Akceptuje formaty: CamelCase (IndividuallyTracked) lub UPPER_SNAKE_CASE (INDIVIDUALLY_TRACKED).
     /// </summary>
-    /// <param name="trackingStrategy">Nazwa strategii śledzenia (np. <c>IndividuallyTracked</c>, <c>BatchTracked</c>, <c>Unique</c>).</param>
+    /// <param name="trackingStrategy">Nazwa strategii śledzenia (np. <c>IndividuallyTracked</c>, <c>INDIVIDUALLY_TRACKED</c>, <c>BatchTracked</c>).</param>
     /// <response code="200">Kolekcja typów produktów spełniających kryterium (może być pusta).</response>
     [HttpGet]
     [ProducesResponseType(typeof(IEnumerable<ProductTypeResponse>), StatusCodes.Status200OK)]
     public async Task<IActionResult> List([FromQuery] string? trackingStrategy)
     {
-        if (trackingStrategy is null)
+        if (string.IsNullOrWhiteSpace(trackingStrategy))
             return Ok(Array.Empty<ProductTypeResponse>());
 
-        var views = await mediator.Send(new FindByTrackingStrategyCriteria(trackingStrategy));
+        // Konwersja CamelCase na UPPER_SNAKE_CASE (np. IndividuallyTracked → INDIVIDUALLY_TRACKED)
+        var normalizedStrategy = NormalizeCamelCaseToSnakeCase(trackingStrategy);
+        
+        var views = await mediator.Send(new FindByTrackingStrategyCriteria(normalizedStrategy));
         return Ok(views.Select(ProductMapper.ToResponse));
+    }
+
+    /// <summary>
+    /// Konwertuje CamelCase na UPPER_SNAKE_CASE.
+    /// Przykłady: 
+    /// - "IndividuallyTracked" → "INDIVIDUALLY_TRACKED"
+    /// - "BatchTracked" → "BATCH_TRACKED"
+    /// - "Identical" → "IDENTICAL"
+    /// </summary>
+    private static string NormalizeCamelCaseToSnakeCase(string input)
+    {
+        var result = new System.Text.StringBuilder();
+        for (int i = 0; i < input.Length; i++)
+        {
+            char c = input[i];
+            if (char.IsUpper(c) && i > 0)
+            {
+                result.Append('_');
+            }
+            result.Append(char.ToUpperInvariant(c));
+        }
+        return result.ToString();
     }
 
     /// <summary>
