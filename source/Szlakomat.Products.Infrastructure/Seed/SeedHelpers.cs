@@ -27,6 +27,37 @@ internal static class SeedHelpers
             .With("requires_timed_entry", "true");
 
     /// <summary>
+    /// Returns base metadata common to all Bazylika Mariacka products.
+    /// </summary>
+    public static ProductMetadata MariackaBase() =>
+        ProductMetadata.Empty()
+            .With("city", "Kraków")
+            .With("district", "Śródmieście")
+            .With("address", "Plac Mariacki 5, 31-042 Kraków")
+            .With("category", "kościół-bazylika")
+            .With("unesco", "false")
+            .With("accessibility", "limited");
+
+    /// <summary>
+    /// Returns base metadata for Bazylika Mariacka exhibits/routes (indoor).
+    /// </summary>
+    public static ProductMetadata MariackaRouteBase() =>
+        MariackaBase()
+            .With("indoor_outdoor", "indoor")
+            .With("attraction_type", "religious-heritage");
+
+    /// <summary>
+    /// Returns contact/booking metadata for Bazylika Mariacka.
+    /// </summary>
+    public static ProductMetadata MariackaContactInfo() =>
+        ProductMetadata.Empty()
+            .With("website", "www.mariacki.com")
+            .With("phone", "+48 12 422 05 21")
+            .With("group_booking_note", "Grupy zorganizowane: wymagana wcześniejsza rezerwacja telefoniczna lub mailowa")
+            .With("group_booking_email", "muzeum@mariacki.com")
+            .With("max_group_size", "30");
+
+    /// <summary>
     /// Returns metadata for reservation office details.
     /// </summary>
     public static ProductMetadata WawelReservationInfo() =>
