@@ -1,0 +1,140 @@
+﻿### ========================================================================
+### BAZYLIKA MARIACKA - TESTY SEEDOWANIA DANYCH
+### ========================================================================
+### 
+### Seedowane produkty dla Bazyliki Mariackiej:
+###
+### 1. DWIE WYSTAWY (exhibitions):
+###    - ID: 1a2b3c4d-5e6f-7a8b-9c0d-1e2f3a4b5c6d (Zwiedzanie wnętrza, IndividuallyTracked)
+###    - ID: 2b3c4d5e-6f7a-8b9c-0d1e-2f3a4b5c6d7e (Hejnalica, BatchTracked)
+###
+### 2. PIĘĆ USŁUG DODATKOWYCH (services):
+###    - Przewodnik po Bazylice — język polski (BatchTracked)
+###    - Przewodnik po Bazylice — język obcy (BatchTracked)
+###    - Audioprzewodnik — Bazylika Mariacka (Identical)
+###    - Zezwolenie na fotografowanie profesjonalne (Identical)
+###    - Słuchawki grupowe — Bazylika Mariacka (BatchTracked)
+###
+### 3. CZTERY PAKIETY (packages):
+###    - Bazylika Mariacka — Wizyta indywidualna (IndividuallyTracked)
+###    - Bazylika Mariacka — Wycieczka grupowa z przewodnikiem (BatchTracked)
+###    - Bazylika Mariacka — Bilet łączony (IndividuallyTracked)
+###    - Bazylika Mariacka — Szkolna wycieczka (BatchTracked)
+###
+### 4. DWA WPISY KATALOGOWE (catalog entries):
+###    - Bazylika Mariacka — Zwiedzanie wnętrza (dostępna: 2025-01-01 do 2026-12-31)
+###    - Bazylika Mariacka — Hejnalica (dostępna: 2025-04-10 do 2026-12-31, sezonowo)
+###
+### 5. DWA POWIĄZANIA (relationships):
+###    - Zwiedzanie wnętrza ↔ Hejnalica (CompatibleWith, w obie strony)
+###
+### ========================================================================
+### OPIS SZCZEGÓŁOWY
+### ========================================================================
+###
+### ✓ Zwiedzanie wnętrza:
+###   - Cena: 20 PLN (standard), 10 PLN (zniżka)
+###   - Godziny: Pon–Sob 11:30–18:00, Ndz i Święta 14:00–18:00
+###   - Ołtarz otwiera się: 11:50
+###   - Kasa zamyka: 15 min przed zamknięciem
+###   - TrackingStrategy: IndividuallyTracked (liczone jednotkowo)
+###   - Cechy: ticket_type (standard/reduced), visit_date (2025-04-10 do 2026-12-31)
+###   - Online booking: dostępne
+###   - Kategorie: bazylika, kościół, gotyk, wnętrze, kraków, rynek
+###
+### ✓ Hejnalica (Wieża Północna):
+###   - Cena: 20 PLN (standard), 15 PLN (zniżka)
+###   - Godziny: Pt–Ndz 10:10–17:30, wejścia co 10 minut
+###   - Max osób na slot: 15
+###   - Sezon: od 10 kwietnia każdego roku (dostępna: 2025-04-10 do 2026-12-31)
+###   - Wymagany wiek: min 7 lat (GreaterThan 6)
+###   - TrackingStrategy: BatchTracked (liczone partiami)
+###   - Cechy: ticket_type, visit_date, visit_time_slot (45 dostępnych slotów)
+###   - Bilety: tylko w kasie, brak rezerwacji online
+###   - Kategorie: bazylika, wieża, panorama, hejnalica, kraków, rynek, sezonowe
+###
+### ✓ Usługi:
+###   - Przewodnik PL: 120 PLN/grupa (rezerwacja min 2 dni wcześniej, grp 1-30)
+###   - Przewodnik obcy: 150 PLN/grupa (rezerwacja min 3 dni wcześniej, grp 1-30, EN/DE/FR/ES/IT)
+###   - Audioprzewodnik: 8 PLN/osoba (min wiek 12 lat, kaucja 20 PLN, jez. PL/EN/DE)
+###   - Pozwolenie na fotografowanie: 50 PLN (rezerwacja min 5 dni wcześniej, cele: commercial/publication/film)
+###   - Słuchawki grupowe: 5 PLN/szt (obowiązkowe dla grup > 10 osób, max 30 osób)
+###
+### ========================================================================
+
+###
+
+### TEST 1: Zwiedzanie wnętrza (ID: 1a2b3c4d-5e6f-7a8b-9c0d-1e2f3a4b5c6d)
+### Oczekiwane: IndividuallyTracked, 20 PLN standard / 10 PLN zniżka
+### Cechy: ticket_type, visit_date
+GET http://localhost:5000/api/products/1a2b3c4d-5e6f-7a8b-9c0d-1e2f3a4b5c6d HTTP/1.1
+
+###
+
+### TEST 2: Hejnalica - Wieża Północna (ID: 2b3c4d5e-6f7a-8b9c-0d1e-2f3a4b5c6d7e)
+### Oczekiwane: BatchTracked, 20 PLN standard / 15 PLN zniżka
+### Cechy: ticket_type, visit_date, visit_time_slot (48 slotów)
+### Min wiek: 7 lat
+GET http://localhost:5000/api/products/2b3c4d5e-6f7a-8b9c-0d1e-2f3a4b5c6d7e HTTP/1.1
+
+###
+
+### TEST 3: Produkty z trackingStrategy=IndividuallyTracked
+### Konwersja: IndividuallyTracked → INDIVIDUALLY_TRACKED
+### Oczekiwane: Produkty z IndividuallyTracked
+GET http://localhost:5000/api/products?trackingStrategy=IndividuallyTracked HTTP/1.1
+
+###
+
+### TEST 4: Produkty z trackingStrategy=BatchTracked
+### Konwersja: BatchTracked → BATCH_TRACKED
+### Oczekiwane: Produkty z BatchTracked (Hejnalica + usługi + pakiety)
+GET http://localhost:5000/api/products?trackingStrategy=BatchTracked HTTP/1.1
+
+###
+
+### TEST 5: Produkty z trackingStrategy=Identical
+### Oczekiwane: Usługi takie jak Audioprzewodnik i Zezwolenie na fotografowanie
+GET http://localhost:5000/api/products?trackingStrategy=Identical HTTP/1.1
+
+###
+
+### TEST 6: Szukaj "Bazylika" w katalogu
+### Oczekiwane: 2 wpisy (Zwiedzanie wnętrza + Hejnalica)
+GET http://localhost:5000/api/catalog?q=Bazylika HTTP/1.1
+
+###
+
+### TEST 7: Szukaj "Hejnalica" w katalogu
+### Oczekiwane: 1 wpis (Hejnalica)
+GET http://localhost:5000/api/catalog?q=Hejnalica HTTP/1.1
+
+###
+
+### TEST 8: Szukaj kategorii "bazylika"
+### Oczekiwane: 2 wpisy (obie trasy Bazyliki)
+GET http://localhost:5000/api/catalog?category=bazylika HTTP/1.1
+
+###
+
+### TEST 9: Szukaj kategorii "wieża"
+### Oczekiwane: 1 wpis (Hejnalica)
+GET http://localhost:5000/api/catalog?category=wieża HTTP/1.1
+
+###
+
+### TEST 10: Szukaj kategorii "kościół"
+### Oczekiwane: 1 wpis (Zwiedzanie wnętrza)
+GET http://localhost:5000/api/catalog?category=kościół HTTP/1.1
+
+###
+
+### TEST 11: Pobierz po productTypeId (Zwiedzanie wnętrza)
+### Oczekiwane: 1 wpis katalogowy
+GET http://localhost:5000/api/catalog?productTypeId=1a2b3c4d-5e6f-7a8b-9c0d-1e2f3a4b5c6d HTTP/1.1
+
+###
+
+### TEST 12: Pobierz po productTypeId (Hejnalica)
+### Oczekiwane: 1 wpis katalogowy
+GET http://localhost:5000/api/catalog?productTypeId=2b3c4d5e-6f7a-8b9c-0d1e-2f3a4b5c6d7e HTTP/1.1
