@@ -75,7 +75,7 @@ internal static class KrakowSeedData
             exhibitions.Hejnalica,
             services);
 
-        MariackkaCatalogSeed.Seed(
+        MariackaCatalogSeed.Seed(
             catalogRepo,
             exhibitions.BasilikaInterior,
             exhibitions.Hejnalica);

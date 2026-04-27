@@ -9,7 +9,7 @@ namespace Szlakomat.Products.Infrastructure.Seed.BazylikaMariacka;
 /// Two independent routes — each receives a separate catalog entry.
 /// Neither route implies or excludes the other; they can be purchased independently.
 /// </summary>
-internal static class MariackkaCatalogSeed
+internal static class MariackaCatalogSeed
 {
     // Wnętrze: available year-round during church visiting hours
     private static readonly DateOnly InteriorStart = new(2025, 1, 1);
