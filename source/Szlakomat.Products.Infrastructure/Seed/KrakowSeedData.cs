@@ -2,6 +2,7 @@ using Szlakomat.Products.Domain.CommercialOffer;
 using Szlakomat.Products.Domain.Relationships;
 using Szlakomat.Products.Infrastructure.Catalog;
 using Szlakomat.Products.Infrastructure.Seed.Wawel;
+using Szlakomat.Products.Infrastructure.Seed.WislaCruise;
 
 namespace Szlakomat.Products.Infrastructure.Seed;
 
@@ -25,5 +26,6 @@ internal static class KrakowSeedData
 
         WawelCatalogSeed.Seed(catalogRepo, exhibitions, services, packages);
         WawelRelationshipsSeed.Seed(relationshipRepo, relationshipFactory, exhibitions, services, packages);
+	WislaRiversideCruiseSeed.Seed(productRepo, packageRepo, catalogRepo, relationshipRepo, relationshipFactory);
     }
 }
