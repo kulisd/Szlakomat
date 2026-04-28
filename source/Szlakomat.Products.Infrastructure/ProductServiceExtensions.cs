@@ -24,6 +24,7 @@ public static class ProductServiceExtensions
         var relationshipFactory = new ProductRelationshipFactory(ProductRelationshipId.Random);
 
         KrakowSeedData.Seed(productRepo, packageRepo, catalogRepo, relationshipRepo, relationshipFactory);
+        OjcowSeedData.Seed(productRepo, packageRepo, catalogRepo, relationshipRepo, relationshipFactory);
 
         services.AddSingleton<IProductTypeRepository>(productRepo);
         services.AddSingleton<IPackageTypeRepository>(packageRepo);

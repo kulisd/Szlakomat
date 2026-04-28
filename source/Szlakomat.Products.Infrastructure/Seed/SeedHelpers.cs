@@ -39,4 +39,19 @@ internal static class SeedHelpers
             .With("max_group_size", "30")
             .With("groups_above_30_split", "true")
             .With("confirmation_deadline_days_before", "3");
+
+    public static ProductMetadata OPNBase() =>
+        ProductMetadata.Empty()
+            .With("park", "Ojcowski Park Narodowy")
+            .With("region", "Wyżyna Krakowsko-Częstochowska");
+
+    public static ProductMetadata OPNAttractionBase() =>
+        OPNBase()
+            .With("indoor_outdoor", "outdoor");
+
+    public static ProductMetadata OPNTrailBase() =>
+        OPNBase()
+            .With("type", "szlak-turystyczny")
+            .With("price_standard_pln", "0")
+            .With("indoor_outdoor", "outdoor");
 }
