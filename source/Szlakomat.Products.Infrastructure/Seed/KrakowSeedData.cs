@@ -1,6 +1,7 @@
 using Szlakomat.Products.Domain.CommercialOffer;
 using Szlakomat.Products.Domain.Relationships;
 using Szlakomat.Products.Infrastructure.Catalog;
+using Szlakomat.Products.Infrastructure.Seed.ParkWodny;
 using Szlakomat.Products.Infrastructure.Seed.Wawel;
 
 namespace Szlakomat.Products.Infrastructure.Seed;
@@ -25,5 +26,13 @@ internal static class KrakowSeedData
 
         WawelCatalogSeed.Seed(catalogRepo, exhibitions, services, packages);
         WawelRelationshipsSeed.Seed(relationshipRepo, relationshipFactory, exhibitions, services, packages);
+
+        // ── Park Wodny Kraków ──────────────────────────────────────────
+        var pwAttractions = ParkWodnyAttractionsSeed.Seed(productRepo);
+        var pwServices    = ParkWodnyServicesSeed.Seed(productRepo);
+        var pwPackages    = ParkWodnyPackagesSeed.Seed(packageRepo, pwAttractions, pwServices);
+
+        ParkWodnyCatalogSeed.Seed(catalogRepo, pwAttractions, pwServices, pwPackages);
+        ParkWodnyRelationshipsSeed.Seed(relationshipRepo, relationshipFactory, pwAttractions, pwServices, pwPackages);
     }
 }
