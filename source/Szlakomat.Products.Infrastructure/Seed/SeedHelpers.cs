@@ -3,7 +3,7 @@ using Szlakomat.Products.Domain.Common;
 namespace Szlakomat.Products.Infrastructure.Seed;
 
 /// <summary>
-/// Shared metadata builder helpers for Wawel seed data.
+/// Shared metadata builder helpers for seed data across all Kraków attractions.
 /// </summary>
 internal static class SeedHelpers
 {
@@ -39,4 +39,25 @@ internal static class SeedHelpers
             .With("max_group_size", "30")
             .With("groups_above_30_split", "true")
             .With("confirmation_deadline_days_before", "3");
+
+    /// <summary>
+    /// Returns base metadata common to all Kopiec Kościuszki products.
+    /// </summary>
+    public static ProductMetadata KopiecBase() =>
+        ProductMetadata.Empty()
+            .With("city", "Kraków")
+            .With("district", "Zwierzyniec")
+            .With("category", "kopiec-fort")
+            .With("address", "al. Waszyngtona 1, 30-204 Kraków")
+            .With("operator", "Fundacja Kopiec Kościuszki")
+            .With("accessibility", "none")
+            .With("parking", "paid_nearby");
+
+    /// <summary>
+    /// Returns base metadata for Kopiec Kościuszki outdoor attractions.
+    /// </summary>
+    public static ProductMetadata KopiecOutdoorBase() =>
+        KopiecBase()
+            .With("indoor_outdoor", "outdoor")
+            .With("weather_dependent", "true");
 }
