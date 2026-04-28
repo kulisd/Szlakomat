@@ -3,7 +3,7 @@ using Szlakomat.Products.Domain.Common;
 namespace Szlakomat.Products.Infrastructure.Seed;
 
 /// <summary>
-/// Shared metadata builder helpers for Wawel seed data.
+/// Shared metadata builder helpers for seed data (Wawel, Park Wodny, ...).
 /// </summary>
 internal static class SeedHelpers
 {
@@ -25,6 +25,30 @@ internal static class SeedHelpers
         WawelBase()
             .With("indoor_outdoor", "indoor")
             .With("requires_timed_entry", "true");
+
+    // ── Park Wodny Kraków helpers ────────────────────────────────────────
+
+    /// <summary>
+    /// Returns base metadata common to all Park Wodny Kraków products.
+    /// Adres: ul. Dobrego Pasterza 126, 31-416 Kraków.
+    /// </summary>
+    public static ProductMetadata ParkWodnyBase() =>
+        ProductMetadata.Empty()
+            .With("city", "Kraków")
+            .With("district", "Prądnik Czerwony")
+            .With("category", "park-wodny")
+            .With("venue", "Park Wodny Kraków")
+            .With("address", "ul. Dobrego Pasterza 126")
+            .With("year_round", "true")
+            .With("accessibility", "full")
+            .With("opening_mon_thu", "10:00-22:00")
+            .With("opening_fri", "10:00-23:00")
+            .With("opening_sat", "09:00-23:00")
+            .With("opening_sun", "09:00-22:00")
+            .With("phone", "+48 12 616 31 90")
+            .With("website", "parkwodny.pl");
+
+    // ── Wawel helpers (below) ─────────────────────────────────────────────
 
     /// <summary>
     /// Returns metadata for reservation office details.
